@@ -1,65 +1,57 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const RegistrationForm = () => {
-    // Managing form state with useState
-    const [formData, setFormData] = useState({
-        username: "",
-        email: "",
-        password: "",
-    });
+  // Define state variables for form fields
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    // State for validation messages
-    const [errors, setErrors] = useState({});
+  // Handle form submission
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!username || !email || !password) {
+      alert("All fields are required!");
+      return;
+    }
+    console.log("Form submitted:", { username, email, password });
+  };
 
-    // Handles input changes
-    const handleChange = (event) => {
-        setFormData({
-            ...formData,
-            [event.target.name]: event.target.value,
-        });
-    };
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>Username:</label>
+        <input
+          type="text"
+          value={username} 
+          onChange={(e) => setUsername(e.target.value)}  
+          required
+        />
+      </div>
 
-    // Handles form submission
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        let validationErrors = {};
+      <div>
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}  
+          onChange={(e) => setEmail(e.target.value)}  
+          required
+        />
+      </div>
 
-        // Basic validation
-        if (!formData.username) validationErrors.username = "Username is required!";
-        if (!formData.email) validationErrors.email = "Email is required!";
-        if (!formData.password) validationErrors.password = "Password is required!";
+      <div>
+        <label>Password:</label>
+        <input
+          type="password"
+          value={password}  
+          onChange={(e) => setPassword(e.target.value)}  
+          required
+        />
+      </div>
 
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-        } else {
-            console.log("Form submitted:", formData);
-            setErrors({});
-        }
-    };
-
-    return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Username:</label>
-                <input type="text" name="username" value={formData.username} onChange={handleChange} />
-                {errors.username && <p style={{ color: "red" }}>{errors.username}</p>}
-            </div>
-            
-            <div>
-                <label>Email:</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} />
-                {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
-            </div>
-
-            <div>
-                <label>Password:</label>
-                <input type="password" name="password" value={formData.password} onChange={handleChange} />
-                {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
-            </div>
-
-            <button type="submit">Register</button>
-        </form>
-    );
+      <button type="submit">Register</button>
+    </form>
+  );
 };
 
 export default RegistrationForm;
+

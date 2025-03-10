@@ -1,12 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { authProvider } from '../auth'; 
 import Home from './components/Home';
 import About from './components/About';
 import Profile from './components/Profile';
-import Post from './components/BlogPost';
+import BlogPost from "./components/BlogPost";
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
+    <authProvider>
     <div>
       <nav>
         <Link to="/">Home</Link> | 
@@ -17,11 +19,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/blog/:id" element={<BlogPost />} /> {/* Dynamic route */}
+          <Route path="/Blog/:id" element={<BlogPost />} /> {/* Dynamic route */}
           <Route path="/profile/*" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         </Routes>
       </Router>
     </div>
+    </authProvider>
   );
 }
 

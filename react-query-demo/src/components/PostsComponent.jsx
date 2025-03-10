@@ -22,6 +22,7 @@ const PostsComponent = () => {
   return (
     <div>
       <h2>Posts</h2>
+      <button onClick={() => refetch()}>Refresh Posts</button> {/* Added Button */}
       <ul>
         {data.map(post => (
           <li key={post.id}>{post.title}</li>

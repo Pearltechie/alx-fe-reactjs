@@ -1,24 +1,36 @@
 import { useState } from "react";
 
 const AddRecipeForm = () => {
-  const [title, setTitle] = useState("");
-  const [ingredients, setIngredients] = useState("");
-  const [steps, setSteps] = useState("");
-  const [error, setError] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!title || !ingredients || !steps) {
-      setError("All fields are required!");
-      return;
-    }
-    console.log({ title, ingredients, steps }); // This simulates form submission
-    setError("");
-    setTitle("");
-    setIngredients("");
-    setSteps("");
-  };
-
+    const [title, setTitle] = useState("");
+    const [ingredients, setIngredients] = useState("");
+    const [steps, setSteps] = useState("");
+    const [errors, setErrors] = useState({});
+  
+    // Validation function
+    const validate = () => {
+      let tempErrors = {};
+  
+      if (!title.trim()) tempErrors.title = "Title is required";
+      if (!ingredients.trim()) tempErrors.ingredients = "Ingredients are required";
+      if (!steps.trim()) tempErrors.steps = "Preparation steps are required";
+  
+      setErrors(tempErrors);
+  
+      return Object.keys(tempErrors).length === 0;
+    };
+  
+    // Handle form submission
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      
+      if (validate()) {
+        console.log("Form submitted:", { title, ingredients, steps });
+        setTitle("");
+        setIngredients("");
+        setSteps("");
+        setErrors({});
+      }
+    };
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Add a New Recipe</h2>

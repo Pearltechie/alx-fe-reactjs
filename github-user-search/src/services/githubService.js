@@ -6,7 +6,7 @@ const fetchUserData = async ({ username, location, repos }) => {
   try {
     let query = `${username ? `${username}+` : ""}`;
     if (location) query += `location:${location}+`;
-    if (repos) query += `repos:>${repos}`;
+    if (repos) query += `minRepos:>${repos}`;
 
     const response = await axios.get(`${GITHUB_API_URL}${query}`);
     return response.data.items || [];

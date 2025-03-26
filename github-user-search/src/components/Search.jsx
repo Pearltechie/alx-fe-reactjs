@@ -1,53 +1,75 @@
 
 import { useState } from "react";
-import axios from "axios";
+import fetchUserData from "../services/githubService";
 
-const Search = () => {
-  const [username, setUsername] = useState("");
-  const [userData, setUserData] = useState(null);
+const Search = ({ setResults }) => {
+  const [searchParams, setSearchParams] = useState({
+    username: "",
+    location: "",
+    repos: "",
+  });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const fetchUserData = async (e) => {
+  const handleChange = (e) => {
+    setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setUserData(null);
 
     try {
-      const response = await axios.get(`https://api.github.com/users/${username}`);
-      setUserData(response.data);
+      const users = await fetchUserData(searchParams);
+      if (users.length === 0) {
+        setError("Looks like we can't find the user");
+      }
+      setResults(users);
     } catch (err) {
-      setError("Looks like we cant find the user");
+      setError("Error fetching data. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <form onSubmit={fetchUserData}>
+    <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
         <input
           type="text"
-          placeholder="Enter GitHub username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
+          name="username"
+          placeholder="GitHub Username"
+          value={searchParams.username}
+          onChange={handleChange}
+          className="p-2 border rounded"
         />
-        <button type="submit">Search</button>
+        <input
+          type="text"
+          name="location"
+          placeholder="Location (e.g., Nigeria)"
+          value={searchParams.location}
+          onChange={handleChange}
+          className="p-2 border rounded"
+        />
+        <input
+          type="number"
+          name="repos"
+          placeholder="Minimum Repositories"
+          value={searchParams.repos}
+          onChange={handleChange}
+          className="p-2 border rounded"
+        />
+        <button
+          type="submit"
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+        >
+          Search
+        </button>
       </form>
-
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      {userData && (
-        <div>
-          <img src={userData.avatar_url} alt={userData.login} width="100" />
-          <h2>{userData.login}</h2>
-          <a href={userData.html_url} target="_blank" rel="noopener noreferrer">
-            Visit Profile
-          </a>
-        </div>
-      )}
+      {loading && <p className="text-gray-500 mt-2">Loading...</p>}
+      {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   );
 };

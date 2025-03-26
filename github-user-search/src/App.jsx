@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { fetchGitHubUser } from "./services/githubService";
+import Search from "./components/Search";
 
 function App() {
     const [username, setUsername] = useState("");
@@ -38,6 +39,7 @@ function App() {
                     <a href={userData.html_url} target="_blank" rel="noopener noreferrer">
                         Visit GitHub Profile
                     </a>
+                    <Search />
                 </div>
             )}
         </div>

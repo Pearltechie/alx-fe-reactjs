@@ -24,7 +24,7 @@ const Search = ({ setResults }) => {
     try {
       const users = await fetchUserData(searchParams);
       if (users.length === 0) {
-        setError("Looks like we can't find the user");
+        setError("Looks like we cant find the user");
       }
       setResults(users);
     } catch (err) {

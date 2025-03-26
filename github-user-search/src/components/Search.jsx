@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { fetchUserData } from "../services/githubService";
+import axios from "axios";
 
 const Search = () => {
   const [username, setUsername] = useState("");
@@ -8,44 +8,43 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSearch = async (e) => {
+  const fetchUserData = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setUserData(null);
 
     try {
-        const response = await axios.get(`https://api.github.com/users/${username}`);
-        setUserData(response.data);
-      } catch (err) {
-        setError("Looks like we can't find the user");
-      } finally {
-        setLoading(false);
-      }
-    };
+      const response = await axios.get(`https://api.github.com/users/${username}`);
+      setUserData(response.data);
+    } catch (err) {
+      setError("Looks like we can't find the user");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="search-container">
-      <h1>GitHub User Search</h1>
-      <form onSubmit={handleSearch}>
+    <div>
+      <form onSubmit={fetchUserData}>
         <input
           type="text"
-          placeholder="Enter GitHub Username"
+          placeholder="Enter GitHub username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          required
         />
         <button type="submit">Search</button>
       </form>
 
       {loading && <p>Loading...</p>}
-      {error && <p className="error">{error}</p>}
-
+      {error && <p>{error}</p>}
       {userData && (
-        <div className="user-card">
-          <img src={userData.avatar_url} alt="User Avatar" />
-          <h2>{userData.name || "No Name Available"}</h2>
+        <div>
+          <img src={userData.avatar_url} alt={userData.login} width="100" />
+          <h2>{userData.login}</h2>
           <a href={userData.html_url} target="_blank" rel="noopener noreferrer">
-            View Profile
+            Visit Profile
           </a>
         </div>
       )}

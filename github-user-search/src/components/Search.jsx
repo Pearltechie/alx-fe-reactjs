@@ -15,14 +15,14 @@ const Search = () => {
     setUserData(null);
 
     try {
-      const data = await fetchUserData(username);
-      setUserData(data);
-    } catch (err) {
-      setError("Looks like we can't find the user");
-    } finally {
-      setLoading(false);
-    }
-  };
+        const response = await axios.get(`https://api.github.com/users/${username}`);
+        setUserData(response.data);
+      } catch (err) {
+        setError("Looks like we can't find the user");
+      } finally {
+        setLoading(false);
+      }
+    };
 
   return (
     <div className="search-container">
